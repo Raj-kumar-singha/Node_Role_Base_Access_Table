@@ -3,21 +3,21 @@ const user = require("../models/index").user;
 
 const authMiddleware = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers['x-access-token'];
 
     if (!authHeader) {
       return res.status(401).json({ error: 'Authorization header missing' });
     }
 
-    const token = authHeader.split(' ')[1];
+    const [scheme, token] = authHeader.split(' ');
 
-    if (!token) {
+    if ( !token || scheme !== 'JWT') {
       return res.status(401).json({ error: 'Token missing' });
     }
 
     // Verify token and decode user information
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("==================>", decoded);
+    console.log("authMiddleware => decode", decoded);
     // Attach user information to the request object for later use
     req.user = decoded;
 

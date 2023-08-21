@@ -1,13 +1,36 @@
-const User = require("../models/index").user;
+const User = require("../models/index").user,
+      bcrypt = require('bcryptjs');
 
 let myUser = function () {
 this.createUser = async(req, res) => {
   try {
     const { name, role, email, password } = req.body;
     // Implement user creation logic based on role
+
+    // Validate user input
+      if (!(email && password && name && role)) {
+        return res.status(400).send("All input is required");
+      }
+      //  Check if user exists in our database
+      const oldUser = await User.findOne({ where: { email: email } });
+      console.log("createUser | userContoller => oldUser", oldUser);
+
+      if (oldUser) {
+        return res.status(409).send("This Email Already Exists, Please Login");
+      }
+      // Encrypt user password
+      const encryptedPassword = await bcrypt.hash(password, 10);
+
     // Example: Only Super Admin can create all user roles
     if (req.user.role === 'superadmin') {
-      const newUser = await User.create({ name, role, email, password });
+      // Create user in our database
+      const newUser = await User.create({
+        name: name,
+        role: role,
+        email: email.toLowerCase(),
+        password: encryptedPassword,
+      });
+      console.log("createUser | userContoller => user", newUser);
       res.status(201).json(newUser);
     } else {
       res.status(403).json({ error: 'Permission denied' });

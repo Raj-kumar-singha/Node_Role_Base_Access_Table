@@ -6,20 +6,20 @@ const express = require('express'),
     authMiddleware = require('../middleware/authMiddleware');
 
 
-router.post('/register', authController.createUser);
+// router.post('/register', authController.createUser);  ==> No Need For this Project
 router.post('/login', authController.login);
 
 //? Users Api's
 router.post('/createUser', authMiddleware, userController.createUser);
-router.post('/getUser', authMiddleware, userController.getUser);
-router.post('/updateUser', authMiddleware, userController.updateUser);
-router.post('/deleteUser', authMiddleware, userController.deleteUser);
+router.get('/getUser/:id', authMiddleware, userController.getUser);
+router.put('/updateUser/:id', authMiddleware, userController.updateUser);
+router.delete('/deleteUser/:id', authMiddleware, userController.deleteUser);
 
 
 //? Feeds Api's
 router.post('/createFeed', authMiddleware, feedController.createFeed);
-router.post('/getFeed', authMiddleware, feedController.getFeed);
-router.post('/updateFeed', authMiddleware, feedController.updateFeed);
-router.post('/deleteFeed', authMiddleware, feedController.deleteFeed);
+router.get('/getFeed/:id', authMiddleware, feedController.getFeed);
+router.put('/updateFeed/:id', authMiddleware, feedController.updateFeed);
+router.delete('/deleteFeed/:id', authMiddleware, feedController.deleteFeed);
 
 module.exports = router;
