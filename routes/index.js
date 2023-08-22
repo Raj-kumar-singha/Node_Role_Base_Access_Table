@@ -5,8 +5,8 @@ const express = require('express'),
     feedController = require('../controller/feedController'),
     authMiddleware = require('../middleware/authMiddleware');
 
-
-// router.post('/register', authController.createUser);  ==> No Need For this Project
+//? Authentication Api's
+router.post('/register', authController.createUser);  //==> Normal registration without any X-access-token
 router.post('/login', authController.login);
 
 //? Users Api's
