@@ -1,4 +1,5 @@
 const User = require("../models/index").user,
+  sessionModel = require("../models/index").sessionLog,
   bcrypt = require('bcryptjs'),
   sessionController = require('./sessionController'),
   jwt = require("jsonwebtoken");
@@ -55,10 +56,21 @@ let Auth = function () {
         const user = await User.findOne({
           where: { email },
         });
+
+        // Password Validate: -
+        const passwordIsValid = bcrypt.compare(
+          req.body.password,
+          user.password
+        );
   
-        if (!(user && (await bcrypt.compare(password, user.password)))) {
+        if (!passwordIsValid) {
+          return res.status(401).send({
+            message: "Invalid Password!",
+          });
+        }else if(!(user && passwordIsValid)) {
           return res.status(400).send("Invalid Credentials");
         }
+
         // Create token
         const token = jwt.sign(
           {
@@ -69,13 +81,16 @@ let Auth = function () {
           },
           process.env.JWT_SECRET,
           {
+            algorithm: 'HS256',
+            allowInsecureKeySizes: true,
             expiresIn: "2h",
           }
         );
-        return createSession(token);
-  
+        req.session.token = token;
+
         // Return user and token
         res.status(200).json({ user, token });
+        return createSession({token, name: user.name, email: user.email});
       } catch (err) {
         console.log(err);
         res.status(500).json({ error: "An error occurred" });
@@ -86,11 +101,49 @@ let Auth = function () {
     let createSession = (data) => {
       return sessionController.createSessionLog({
           token: data.token,
-          name: data.user.name,
-          email: data.user.email,
+          name: data.name,
+          email: data.email,
           login_at: new Date()
       });
   }
-  };
+
+
+  //! LOGOUT API: -
+  this.logout = async (req, res) => {
+    try {
+        if(req.session = null){
+          sessionController.updateSessionLog({
+            logout_at: new Date(),
+            where: {token}
+          
+          })
+        }
+        res.status(200).json({
+            message: "You've been signed out!"
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "An error occurred" });
+    }
+};
+
+// const updateSessionLogout = async (email) => {
+//     try {
+//         await sessionController.updateSessionLog({
+//             email: email,
+//             logout_at: new Date()
+//         });
+//     } catch (error) {
+//         console.log("Error updating session:", error);
+//         throw error;
+//     }
+// };
+
+  // let updateSession = (data) => {
+  //   return sessionController.updateSessionLog({
+  //     logout_at: new Date()
+  //   });
+  // };  
+};
   
-  module.exports = new Auth();
+module.exports = new Auth();

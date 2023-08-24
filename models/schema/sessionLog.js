@@ -1,20 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
 	return sequelize.define('sessionlogs', {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        name: {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
 			type: DataTypes.STRING,
-            allowNull: false,
+      allowNull: false,
 		},
-        token: {
-    	    type: DataTypes.STRING(2000),
-            allowNull: false,
-            unique: true,
-    	},
+    token: {
+    	type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
 		email: {
 			type: DataTypes.STRING
 		},
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 		logout_at: {
 			type: DataTypes.DATE			
 		},
-      }, {
+    }, {
         freezeTableName: true
-      });
+  });
 };

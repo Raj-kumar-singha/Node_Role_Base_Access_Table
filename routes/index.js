@@ -8,6 +8,7 @@ const express = require('express'),
 //? Authentication Api's
 router.post('/register', authController.createUser);  //==> Normal registration without any X-access-token
 router.post('/login', authController.login);
+router.post('/logout', authController.logout);
 
 //? Users Api's
 router.post('/createUser', authMiddleware, userController.createUser);
