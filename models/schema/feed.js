@@ -1,27 +1,29 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('feeds', {
+  return sequelize.define('feeds',{
       id: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          primaryKey: true,
-          autoIncrement: true,
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
       },
       name: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          // unique: true,
+        type: DataTypes.STRING,
+        allowNull: false,
+        // unique: true,
       },
       url: {
-          type: DataTypes.STRING,
-          allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       description: {
-          type: DataTypes.STRING,
-          allowNull: false,
-      }
-  },{
-      freezeTableName: true
-  });
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    },
+    {
+      freezeTableName: true,
+    }
+  );
 };
 
 // const { Sequelize, DataTypes } = require('sequelize');
