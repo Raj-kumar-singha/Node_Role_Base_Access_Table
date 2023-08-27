@@ -17,11 +17,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cookieSession({
-    name: 'rajkumar-session',
+    name: 'raj-session',
     secret: process.env.sessionSecret,
     httpOnly: true,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        maxAge: 5 * 60 * 60 * 1000, // 5 min, Auto expire
+      }
   })
 );
 

@@ -1,5 +1,4 @@
 const User = require('../models/index').user,
-  sessionModel = require('../models/index').sessionLog,
   bcrypt = require('bcryptjs'),
   sessionController = require('./sessionController'),
   jwt = require('jsonwebtoken');
@@ -73,7 +72,7 @@ let Auth = function () {
         {
           algorithm: 'HS256',
           allowInsecureKeySizes: true,
-          expiresIn: '2h',
+          expiresIn: 24 * 60 * 60 * 1000,
         }
       );
       // Check if user has an active session
